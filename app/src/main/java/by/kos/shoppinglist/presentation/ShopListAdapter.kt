@@ -1,0 +1,37 @@
+package by.kos.shoppinglist.presentation
+
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import by.kos.shoppinglist.R
+import by.kos.shoppinglist.domain.ShopItem
+
+class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>() {
+
+    val list = listOf<ShopItem>()
+
+    class ShopItemViewHolder(view: View): RecyclerView.ViewHolder(view){
+        val tvName: TextView = view.findViewById(R.id.tv_name)
+        val tvCount: TextView = view.findViewById(R.id.tv_count)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_shop_enabled, parent, false)
+        return ShopItemViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: ShopItemViewHolder, position: Int) {
+        val shopItem = list[position]
+        holder.tvName.text = shopItem.name
+        holder.tvCount.text = shopItem.count.toString()
+        holder.itemView.setOnLongClickListener {
+            false
+        }
+    }
+
+    override fun getItemCount(): Int {
+        return list.size
+    }
+}
