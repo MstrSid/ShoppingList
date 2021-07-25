@@ -1,26 +1,23 @@
 package by.kos.shoppinglist.presentation
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import by.kos.shoppinglist.R
 import by.kos.shoppinglist.domain.ShopItem
 
-class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>() {
+class ShopListAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
+
+    var onShopItemLongClickListener:((ShopItem) -> Unit)? = null
+
+    var onShopItemClickListener:((ShopItem) -> Unit)? = null
 
     var shopList = listOf<ShopItem>()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
-
-    class ShopItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val tvName: TextView = view.findViewById(R.id.tv_name)
-        val tvCount: TextView = view.findViewById(R.id.tv_count)
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
@@ -36,7 +33,11 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
         holder.tvName.text = shopItem.name
         holder.tvCount.text = shopItem.count.toString()
         holder.itemView.setOnLongClickListener {
-            false
+            onShopItemLongClickListener?.invoke(shopItem)
+            shopItem.enabled
+        }
+        holder.itemView.setOnClickListener {
+            onShopItemClickListener?.invoke(shopItem)
         }
     }
 
@@ -62,6 +63,7 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
     override fun getItemCount(): Int {
         return shopList.size
     }
+
     companion object{
         const val VIEW_TYPE_ENABLED: Int = R.layout.item_shop_enabled
         const val VIEW_TYPE_DISABLED: Int = R.layout.item_shop_disabled
